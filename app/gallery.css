@@ -1,0 +1,15 @@
+.lar-gallery{padding:64px 0 40px;overflow:hidden;background:#f8f6ed}
+.gallery-heading{text-align:center}.gallery-heading .eyebrow{justify-content:center;margin-bottom:12px}.gallery-heading>p:last-child{margin-top:16px}
+.gallery-stage{min-height:490px}
+.fan-layout{height:440px;isolation:isolate}
+.fan-card{position:absolute;width:250px;height:310px;overflow:hidden;border:7px solid #fff;border-radius:18px;background:#e6ece4;padding:0;box-shadow:0 15px 35px #15352235;will-change:transform;transform-origin:50% 85%;opacity:0}
+.fan-card:focus-visible{outline:3px solid #ad7910;outline-offset:5px}
+.fan-card[aria-hidden=true]{pointer-events:none}
+.gallery-placeholder{width:280px;height:320px;object-fit:cover;margin:60px auto;border:7px solid white;border-radius:18px}
+.gallery-dialog{width:min(1050px,94vw)!important;max-width:1050px!important;padding:42px 16px 16px;background:var(--card);border-radius:18px}
+.gallery-dialog>img{max-height:78vh;max-width:100%;width:auto;height:auto;object-fit:contain;margin:auto}
+.dark .lar-gallery{background:#17281f}.dark .fan-card{border-color:#304536;background:#23372b}.dark .fan-card:focus-visible{outline-color:#f3cd66}
+@media(max-width:1023px){.fan-card{width:220px;height:290px}.fan-layout{height:410px}}
+@media(max-width:767px){.fan-card{width:180px;height:240px}.fan-layout{height:350px}.gallery-stage{min-height:410px}.lar-gallery{padding-top:50px}}
+@media(max-width:479px){.fan-card{width:155px;height:210px;border-width:5px;border-radius:13px}.fan-layout{height:310px}.gallery-stage{min-height:370px}}
+.dark .lar-gallery{background:#1b2b23}.dark .fan-card{border-color:#7b947f;background:#344f3e;box-shadow:0 16px 36px #0006}

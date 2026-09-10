@@ -26,7 +26,7 @@ export default function SiteMotion({ enabled }: { enabled: boolean }) {
     const selector = [
       ".section-heading > *", ".history-card", ".care-list article",
       ".donation-grid > *", ".partner-card", ".partner-cta",
-      ".featured-event", ".history-heading", ".event-history article",
+      ".event-carousel", ".featured-event", ".history-heading", ".event-history article",
       ".transparency-grid > *", ".contact-grid > *", ".promise-strip span",
     ].join(",");
     document.querySelectorAll(selector).forEach(el => observer.observe(el));

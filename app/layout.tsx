@@ -1,8 +1,12 @@
+import ThemeProvider from "@/components/ThemeProvider";
 import type { Metadata } from "next";
 import "./globals.css";
 import "./lar.css";
 import "./redesign.css";
 import "./motion.css";
+import "./events.css";
+import "./theme.css";
+import "./gallery.css";
 
 export const metadata: Metadata = {
   title: "Lar da Criança Fermino Magnani | Cuidado, educação e parceria",
@@ -23,8 +27,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="pt-BR">
-      <body className="antialiased">{children}</body>
+    <html lang="pt-BR" suppressHydrationWarning>
+      <body className="antialiased"><ThemeProvider>{children}</ThemeProvider></body>
     </html>
   );
 }

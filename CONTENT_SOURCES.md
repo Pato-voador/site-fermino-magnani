@@ -62,3 +62,28 @@ Integração separada em components/LarHeroBackground.jsx com imageSrc=/images/l
 A inspeção da prévia confirmou prefers-reduced-motion: reduce, que impedia a montagem do canvas. O usuário autorizou explicitamente ativar o efeito mesmo assim. O wrapper agora exige apenas ponteiro fino com hover; demais animações preservam suas regras de movimento reduzido. Código original de GridDistortion e parâmetros permanecem intactos. Verificação no navegador: canvas presente, nenhuma mensagem de erro e distorção visível após interação real do cursor.
 
 O fundo anterior foi substituído por public/images/lar-fachada.png: foto original de 929×619 extraída sem ampliação ou IA da página 70 do PDF (página impressa 137) do livro da Secretaria Municipal de Educação: https://www.santacruzdoriopardo.sp.gov.br/assets/uploads/livros/Livro-Sec-Educacao.pdf. Inspeção visual confirma a placa Lar da Criança Fermino Magnani / E.M.E.I. Profª Diva Zacura, sem pessoas. Uso de referência no protótipo; não afirmar que representa o estado atual do prédio. A proporção do wrapper foi ajustada para 929/619.
+
+## Movimento no site e configuração atual
+Entradas progressivas com IntersectionObserver/Web Animations (680 ms, sequência de até 270 ms), abertura do hero, links do menu em sequência e transições de cartões e controles. Conteúdo permanece visível sem JavaScript e recebe foco sem esperar a animação. Sem novas dependências. O pedido explícito de movimento é aplicado nesta versão; o botão Pausar animações no rodapé desliga animações, transições, rolagem suave e GridDistortion.
+Configuração atual enviada pelo usuário nos anexos idênticos: grid=29, mouse=0.1, strength=0.15, relaxation=0.9. Mantida foto real lar-fachada.png em vez da imagem genérica do exemplo.
+
+## Eventos minimalistas
+A pedido do usuário, a área exibe apenas Cortella. Cartaz público existente, com retrato do palestrante, mantido inteiro. Resumo limitado a tema, data, horário, local e link do anúncio. Registros antigos retirados desta área. EventCarousel usa uma lista de eventos e rolagem horizontal com snap, teclado e controles condicionais; com um único evento não duplica slides nem mostra controles sem função. Sem reprodução automática.
+
+Correção solicitada: cartaz substituído por retrato real de Cortella, 1532×1080, Multishow (2024), via https://commons.wikimedia.org/wiki/File:Mario_Sergio_Cortella.jpg, licença CC BY 3.0. Arquivo original local public/images/cortella-retrato.jpg, sem edição; enquadramento responsivo por CSS. Autoria e licença vinculadas na legenda. A foto não é apresentada como registro do evento do Lar.
+Legenda sob a foto removida a pedido do usuário; atribuição e licença agora disponíveis no rodapé, em Créditos de imagem.
+
+## Seletor de tema
+Componente cinematic-theme-switcher fornecido pelo usuário integrado em components/ui, com framer-motion e next-themes. Tema claro inicial; escolha persistida localmente. Seletor dentro do menu, rótulo português, foco visível e pausa das partículas/mola vinculada à preferência de animação do site. Timer cancelado ao desmontar. Paleta escura aplicada às seções, cartões, campos, menus e rodapé; fotografia real e identidade preservadas. TypeScript e build aprovados.
+
+## Galeria em leque
+Componente card-fan-carousel fornecido pelo usuário, adaptado em components/ui com GSAP: botões em português, foco de teclado, fotos ocultas fora da tabulação, limpeza das animações ao desmontar e duração zero quando animações estão pausadas. Oito imagens únicas: seis do banco enviado e duas fontes públicas já verificadas (fachada municipal e sala Avisalá). Inspeção individual confirma ausência de crianças identificáveis nas imagens selecionadas. Sem geração, ampliação ou remoção de pessoas; originais preservados, miniaturas enquadradas por CSS e foto inteira no diálogo. Arquivos do banco com crianças e material gerado por IA não foram copiados para public. Não inferir datas dos nomes WhatsApp.
+Banco: Lar da Criança -20260910T165804Z-1-001.zip. Mapeamento:
+- public/images/gallery/lar-001.jpg: Lar da Criança /WhatsApp Image 2026-08-20 at 09.56.01 (3).jpeg
+- public/images/gallery/lar-015.jpg: Lar da Criança /WhatsApp Image 2026-08-20 at 09.55.53.jpeg
+- public/images/gallery/lar-024.jpg: Lar da Criança /WhatsApp Image 2026-08-20 at 09.55.54.jpeg
+- public/images/gallery/lar-061.jpg: Lar da Criança /WhatsApp Image 2026-08-20 at 09.56.01 (1).jpeg
+- public/images/gallery/lar-070.jpg: Lar da Criança /WhatsApp Image 2026-08-20 at 09.55.47 (2).jpeg
+- public/images/gallery/lar-071.jpg: Lar da Criança /WhatsApp Image 2026-08-20 at 09.55.41.jpeg
+Modo escuro revisado: fundo carvão, textos marfim, cartões em verde médio/ocre/azul esverdeado com bordas visíveis, CTAs amarelos e detalhes dourados para maior separação visual.
+Layout editorial simplificado a pedido do usuário: títulos diretos, descrições curtas, remoção de repetição de CNPJ e de chamadas redundantes. Datas históricas, contatos, placeholders e caminhos de transparência preservados. CTA empresarial sem caixa adicional.

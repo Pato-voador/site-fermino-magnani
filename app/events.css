@@ -1,0 +1,26 @@
+.events-minimal{padding-block:80px;background:#f7f5ee}
+.events-heading{margin-bottom:32px}
+.events-heading h2{font-size:clamp(2.2rem,4vw,3.2rem)}
+.event-carousel{overflow:hidden;border:1px solid #20543d15;border-radius:28px;background:white}
+.event-slides{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;position:relative}
+.event-slides::-webkit-scrollbar{display:none}
+.event-slide{flex:0 0 100%;min-width:0;scroll-snap-align:start;display:grid;grid-template-columns:minmax(260px,.85fr) 1.15fr;align-items:stretch}
+.event-art{display:flex;align-items:center;justify-content:center;padding:24px;background:#e9ede5;overflow:hidden}
+.event-art img{width:auto;height:auto;max-height:430px;max-width:100%;object-fit:contain;border-radius:8px;box-shadow:0 8px 24px #183b251a}
+.event-summary{padding:clamp(28px,5vw,66px);display:flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:20px}
+.event-summary h3{font-size:clamp(2rem,3.5vw,3rem);line-height:1.08;max-width:390px}
+.event-summary>p{max-width:360px;font-size:1.05rem}
+.event-essentials{display:flex;flex-direction:column;gap:3px;color:#20543d;font-size:1rem}
+.event-essentials time{font-weight:700}
+.event-summary .button{margin-top:5px}
+.event-carousel-controls{display:flex;align-items:center;justify-content:center;gap:20px;padding:18px;border-top:1px solid #20543d15}
+.event-carousel-controls button{width:44px;height:44px;border:1px solid #20543d30;border-radius:50%;background:white;color:#20543d}
+.event-carousel-controls button:disabled{opacity:.35;cursor:default}
+@media(max-width:650px){.events-minimal{padding-block:55px}.event-slide{grid-template-columns:1fr}.event-art{padding:22px}.event-art img{max-height:350px}.event-summary{padding:28px;gap:16px}.event-summary h3{font-size:2.25rem}.event-summary .button{width:100%}}
+.event-photo{margin:0;display:flex;flex-direction:column;background:#e9ede5;min-width:0}
+.event-photo .event-art{padding:0;flex:1;min-height:360px;position:relative}
+.event-photo .event-art img{position:absolute;inset:0;width:100%;height:100%;max-height:none;object-fit:cover;object-position:55% center;border-radius:0;box-shadow:none}
+.event-photo figcaption{padding:8px 14px;font-size:.75rem;color:#52614e}
+.event-photo figcaption a{text-decoration:underline;text-underline-offset:3px}
+@media(max-width:650px){.event-photo .event-art{min-height:0;aspect-ratio:4/3}}
+.image-credits{font-size:.8rem;padding:8px 8px 20px;color:inherit}.image-credits summary{cursor:pointer;width:fit-content}.image-credits p{margin-top:10px}.image-credits .text-link{font-size:inherit}

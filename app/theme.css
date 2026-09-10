@@ -1,0 +1,67 @@
+.menu-theme{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:22px 0;border-bottom:1px solid #ffffff25}
+.menu-theme>span{font-size:1rem;font-weight:700}
+html.dark{color-scheme:dark;--background:#111e18;--foreground:#edf3ec;--card:#1c2e24;--card-foreground:#edf3ec;--popover:#1c2e24;--popover-foreground:#edf3ec;--primary:#aed6ba;--primary-foreground:#142b1e;--secondary:#263c2e;--secondary-foreground:#edf3ec;--muted:#23372b;--muted-foreground:#b8cbbd;--accent:#2d4435;--accent-foreground:#edf3ec;--border:#3c5242;--input:#516756;--ring:#e9c66c;--green:#aed6ba;--deep:#204b34;--gold:#f3cd66;--ink:#edf3ec;--text:#b8cbbd;--line:#3c5242}
+.dark body,.dark footer{background:#111e18;color:var(--ink)}
+.dark .header-inner{background:#1c2e24;border-color:#3c5242;box-shadow:0 12px 35px #0003}
+.dark .brand,.dark .brand strong{color:var(--ink)}
+.dark .menu-toggle{background:#2c4435;color:#e0eddf}
+.dark .history-card,.dark .partner-card,.dark .partner-cta{background:#1d3326}
+.dark .partner-card:nth-child(2){background:#383322}
+.dark .partner-card:nth-child(3){background:#233b30}
+.dark .donation-section,.dark .lar-sheet{background:#163524}
+.dark .donation-card,.dark .event-carousel,.dark .partner-dialog{background:#1c2e24;color:var(--ink);border-color:var(--line)}
+.dark .pix-value,.dark .partner-form input,.dark .partner-form textarea{background:#13251b;border-color:var(--input);color:var(--ink)}
+.dark .contact-section,.dark .events-minimal{background:#17281f}
+.dark .event-photo,.dark .event-art{background:#23372b}
+.dark .event-essentials{color:#c9e1cf}
+.dark .event-carousel-controls{border-color:var(--line)}
+.dark .event-carousel-controls button{background:#23372b;color:var(--ink);border-color:var(--line)}
+.dark .button-green{background:#aed6ba;color:#142b1e}
+.dark .button-green:hover:not(:disabled){background:#c9e7d1;color:#142b1e}
+.dark .button-outline:hover:not(:disabled){background:#263c2e}
+.dark .promise-strip{background:#d9b653;color:#173523}
+.dark .contact-grid address .pending-contacts{border-color:var(--line)}
+.dark .skip-link{background:#1c2e24;color:var(--ink)}
+.dark .close-button{color:var(--ink)}
+/* Stronger separation between the page, raised cards and readable content. */
+html.dark{--background:#111917;--foreground:#fff9ed;--card:#2b4037;--card-foreground:#fff9ed;--popover:#293e34;--popover-foreground:#fff9ed;--muted:#30473c;--muted-foreground:#d9e5dc;--accent:#3b5547;--accent-foreground:#fff9ed;--border:#668170;--input:#799484;--ink:#fff9ed;--text:#dce7df;--green:#bce6c7;--line:#536d5d}
+.dark body,.dark footer{background:#111917}
+.dark h2,.dark h3{color:#fff9ed}
+.dark .eyebrow{color:#f4d37c}
+.dark .header-inner{background:#2b4037;border:1px solid #698271;box-shadow:0 12px 35px #0005}
+.dark .menu-toggle{background:#435e4c;color:#fff9ed;border:1px solid #7b9784}
+.dark .history-card,.dark .partner-card,.dark .partner-cta,.dark .donation-card,.dark .event-carousel,.dark .partner-dialog{border:1px solid #698271;box-shadow:0 14px 32px #0003}
+.dark .history-card{background:#2c483b}
+.dark .partner-card{background:#2e4d3d}
+.dark .partner-card:nth-child(2){background:#51452c;border-color:#a38a52}
+.dark .partner-card:nth-child(3){background:#2d474b;border-color:#648a8b}
+.dark .partner-card h3,.dark .history-card h3{color:#fff9ed}
+.dark .partner-card .option-number,.dark .history-year{color:#f8d77c}
+.dark .partner-card p,.dark .history-card p{color:#edf3e9}
+.dark .partner-cta{background:#394a32;border-color:#84906a}
+.dark .donation-card,.dark .event-carousel,.dark .partner-dialog{background:#2b4037}
+.dark .event-summary .eyebrow,.dark .event-essentials{color:#f8d77c}
+.dark .donation-section{background:#1b3026}
+.dark .contact-section{background:#22372d}
+.dark .events-minimal{background:#182720}
+.dark .lar-sheet{background:#223c2e}
+.dark .pix-value,.dark .partner-form input,.dark .partner-form textarea{background:#18291f;border-color:#829c88;color:#fff9ed}
+.dark .button-green{background:#f4ce6d;color:#233426;border:1px solid #ffe3a0}
+.dark .button-green:hover:not(:disabled){background:#ffe09a;color:#192a20}
+.dark .button-outline{border-color:#bce6c7;color:#d2f5d9}
+.dark .button-outline:hover:not(:disabled){background:#344f3e}
+.dark .donation-card .text-link,.dark .text-link{color:#c8efcf}
+.dark .doc-trigger,.dark .contact-grid address strong{color:#fff9ed}
+.dark .card-top,.dark .donation-card label,.dark .small-label{color:#e0ecdf}
+/* More space for the content, fewer competing text blocks. */
+#sobre .section-heading{display:block;max-width:740px;margin-bottom:38px}
+#sobre .section-heading>p{max-width:580px;margin-top:18px}
+.about-grid{grid-template-columns:.85fr 1.15fr;gap:64px}
+.history-card{padding:30px}.history-year{font-size:5.4rem}.history-card h3{font-size:1.3rem;margin-bottom:12px}
+.care-list article{padding-block:23px}.care-list h3{font-size:1.3rem}.care-list p{margin-top:6px}
+.partners-section .section-heading{display:block;max-width:780px}.partners-section .section-heading>p{max-width:560px;margin-top:16px}
+.partner-card{padding:45px 26px 26px}.partner-card h3{font-size:1.3rem}.partner-card .option-number{top:18px;font-size:.72rem}
+.partner-cta,.dark .partner-cta{background:transparent;border:0;box-shadow:none;padding:26px 0 0;margin-top:0}
+.partner-cta p{font-size:1rem}
+.contact-grid h2{font-size:clamp(2.4rem,4vw,3.5rem)}
+@media(max-width:680px){.about-grid{grid-template-columns:1fr;gap:24px}.partner-options{gap:12px}.partner-card{padding:24px 24px 24px 55px}.partner-card .option-number{top:27px;left:20px}.partner-card p{margin-top:8px}.partner-cta{gap:16px}.section-heading h2{font-size:2.35rem}}
