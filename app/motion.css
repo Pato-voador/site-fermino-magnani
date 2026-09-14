@@ -1,23 +1,12 @@
 :root{--motion-ease:cubic-bezier(.22,1,.36,1)}
 html[data-motion=on]{scroll-behavior:smooth}
-.button,.menu-toggle,.close-button{transition:transform .28s var(--motion-ease),box-shadow .28s ease,background-color .25s ease,color .25s ease}
-.partner-card,.donation-card,.event-history article,.featured-event,.care-list article{transition:translate .38s var(--motion-ease),box-shadow .38s ease,border-color .3s ease}
-.text-link{transition:color .25s ease,text-underline-offset .25s var(--motion-ease)}
-.text-link:hover{text-underline-offset:8px}
+.button,.menu-toggle,.close-button{transition:background-color .25s,color .25s,transform .25s var(--motion-ease)}
 .button:not(:disabled):active,.menu-toggle:active{transform:scale(.97)}
-.lar-sheet nav a{transition:padding-left .3s var(--motion-ease),color .2s ease}
-.lar-sheet nav a:hover,.lar-sheet nav a:focus-visible{padding-left:12px}
-.lar-sheet[data-state=open] nav a{animation:menu-arrive .5s var(--motion-ease) both}
-.lar-sheet nav a:nth-child(2){animation-delay:45ms}.lar-sheet nav a:nth-child(3){animation-delay:90ms}.lar-sheet nav a:nth-child(4){animation-delay:135ms}.lar-sheet nav a:nth-child(5){animation-delay:180ms}.lar-sheet nav a:nth-child(6){animation-delay:225ms}
-.partner-form input,.partner-form textarea,.interest-select{transition:border-color .2s ease,box-shadow .2s ease,background-color .2s ease}
-.motion-toggle{font:inherit;font-size:.85rem;text-decoration:underline;text-underline-offset:4px;cursor:pointer;background:transparent;border:0;padding:8px;color:inherit}
-@keyframes menu-arrive{from{opacity:.2;transform:translateX(18px)}to{opacity:1;transform:translateX(0)}}
-@media(hover:hover){
-  .button:not(:disabled):hover,.menu-toggle:hover{transform:translateY(-3px);box-shadow:0 8px 20px #153d2420}
-  .partner-card:hover,.donation-card:hover,.event-history article:hover,.featured-event:hover{translate:0 -5px;box-shadow:0 15px 35px #173c2512}
-  .care-list article:hover{translate:5px 0}
-}
+.lar-sheet nav a{transition:color .2s,padding-left .25s var(--motion-ease)}
+.lar-sheet nav a:hover{padding-left:8px;color:var(--green)}
+.lar-sheet[data-state=open] nav a{animation:menu-arrive .4s var(--motion-ease) both}
+.lar-sheet nav a:nth-child(2){animation-delay:30ms}.lar-sheet nav a:nth-child(3){animation-delay:60ms}.lar-sheet nav a:nth-child(4){animation-delay:90ms}.lar-sheet nav a:nth-child(5){animation-delay:120ms}.lar-sheet nav a:nth-child(6){animation-delay:150ms}.lar-sheet nav a:nth-child(7){animation-delay:180ms}
+@keyframes menu-arrive{from{opacity:.5;transform:translateX(12px)}to{opacity:1;transform:translateX(0)}}
 html[data-motion=off]{scroll-behavior:auto}
 html[data-motion=off] *,html[data-motion=off] *::before,html[data-motion=off] *::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}
-html[data-motion=off] .button,html[data-motion=off] .menu-toggle{transform:none!important}
-html[data-motion=off] .partner-card,html[data-motion=off] .donation-card,html[data-motion=off] .event-history article,html[data-motion=off] .featured-event,html[data-motion=off] .care-list article{translate:none!important}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}

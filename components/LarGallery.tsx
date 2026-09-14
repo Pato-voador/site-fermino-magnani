@@ -29,7 +29,7 @@ export default function LarGallery({ motionEnabled }: { motionEnabled: boolean }
     return () => observer.disconnect();
   }, []);
   return <section className="lar-gallery" id="galeria" ref={section} aria-labelledby="gallery-title">
-    <div className="wrap gallery-heading"><p className="eyebrow">Nosso Lar em imagens</p><h2 id="gallery-title">Um pouco de perto.</h2><p>Espaços, descobertas e gente que faz parte dessa história.</p></div>
+    <div className="wrap gallery-heading"><p className="eyebrow">Galeria</p><h2 id="gallery-title">Um pouco do nosso dia a dia.</h2></div>
     <div className="gallery-stage">{ready ? <SocialCards cards={photos} motionEnabled={motionEnabled} onSelect={setSelected} /> : <img className="gallery-placeholder" src="/images/lar-fachada.png" alt="Fachada do Lar" loading="lazy" />}</div>
     <Dialog open={selected !== null} onOpenChange={open => { if (!open) setSelected(null); }}>
       <DialogContent className="gallery-dialog" aria-describedby={undefined}>

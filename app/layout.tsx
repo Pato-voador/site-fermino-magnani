@@ -1,11 +1,9 @@
 import ThemeProvider from "@/components/ThemeProvider";
 import type { Metadata } from "next";
 import "./globals.css";
-import "./lar.css";
-import "./redesign.css";
+import "./site.css";
+import "./interactive-hover-button.css";
 import "./motion.css";
-import "./events.css";
-import "./theme.css";
 import "./gallery.css";
 
 export const metadata: Metadata = {

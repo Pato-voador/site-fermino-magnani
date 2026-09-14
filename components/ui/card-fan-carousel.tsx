@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef, useCallback } from "react";
 import gsap from "gsap";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 export interface CardItem {
   imgUrl: string;
@@ -19,13 +20,13 @@ const MAX_VISIBLE = 7;
 const HALF = 3;
 
 const FAN_POSITIONS = [
-  { rot: -21, scale: 0.7756, x: -30, y: 7.3, zIndex: 1 },
-  { rot: -14, scale: 0.8498, x: -22, y: 4.0, zIndex: 2 },
-  { rot: -7,  scale: 0.9346, x: -11, y: 1.3, zIndex: 3 },
-  { rot: 0,   scale: 1.0,    x: 0,   y: 0.0, zIndex: 10 },
-  { rot: 7,   scale: 0.9346, x: 11,  y: 1.3, zIndex: 3 },
-  { rot: 14,  scale: 0.8498, x: 22,  y: 4.0, zIndex: 2 },
-  { rot: 21,  scale: 0.7756, x: 30,  y: 7.3, zIndex: 1 },
+  { rot: -15, scale: 0.86, x: -30, y: 3.4, zIndex: 1 },
+  { rot: -10, scale: 0.92, x: -22, y: 1.9, zIndex: 2 },
+  { rot: -5, scale: 0.97, x: -11, y: 0.65, zIndex: 3 },
+  { rot: 0, scale: 1, x: 0, y: 0, zIndex: 10 },
+  { rot: 5, scale: 0.97, x: 11, y: 0.65, zIndex: 3 },
+  { rot: 10, scale: 0.92, x: 22, y: 1.9, zIndex: 2 },
+  { rot: 15, scale: 0.86, x: 30, y: 3.4, zIndex: 1 },
 ];
 
 function getResponsiveMultiplier(width: number) {
@@ -60,16 +61,14 @@ function getSlotConfig(totalCards: number, slot: number) {
   const distance = totalCards > 1 ? (slot - center) / center : 0;
   const absDistance = Math.abs(distance);
   return {
-    rot: distance * 21,
-    scale: 1.0 - 0.2244 * absDistance * absDistance,
+    rot: distance * 15,
+    scale: 1.0 - 0.14 * absDistance * absDistance,
     x: distance * 30,
-    y: absDistance * absDistance * 7.3,
+    y: absDistance * absDistance * 3.4,
     zIndex: 10 - Math.abs(slot - center),
   };
 }
 
-const ARROW_CLASSES =
-  "relative flex items-center justify-center rounded-full border-[1.5px] border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 backdrop-blur-[16px] text-black/40 dark:text-white/55 cursor-pointer shrink-0 z-30 focus-visible:outline-3 focus-visible:outline-offset-4 focus-visible:outline-amber-500 shadow-[0_4px_20px_rgba(0,0,0,0.1)] dark:shadow-[0_4px_20px_rgba(0,0,0,0.4)] hover:border-black/25 dark:hover:border-white/25 hover:text-black/70 dark:hover:text-white/80 active:opacity-70 transition-colors duration-300 before:content-[''] before:absolute before:inset-[3px] before:rounded-full before:border before:border-black/[0.04] dark:before:border-white/[0.04] before:pointer-events-none";
 
 export default function SocialCards({ cards, motionEnabled = true, onSelect }: SocialCardsProps) {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -102,6 +101,13 @@ export default function SocialCards({ cards, motionEnabled = true, onSelect }: S
       direction === "right" ? (prev + 1) % totalCards : (prev - 1 + totalCards) % totalCards
     );
   }, [totalCards, needsPagination]);
+
+  const goTo = (index: number) => {
+    if (isAnimating.current || !needsPagination || index === centerIndex) return;
+    isAnimating.current = true;
+    directionRef.current = index > centerIndex ? "right" : "left";
+    setCenterIndex(index);
+  };
 
   useEffect(() => {
     const container = containerRef.current;
@@ -256,16 +262,19 @@ export default function SocialCards({ cards, motionEnabled = true, onSelect }: S
 
   if (!totalCards) return null;
 
-  const chevron = (direction: "left" | "right") => (
-    <svg className="relative z-[2] w-4 h-4 md:w-5 md:h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-      <polyline points={direction === "left" ? "15 18 9 12 15 6" : "9 18 15 12 9 6"} />
-    </svg>
-  );
-
   return (
-    <section className="flex flex-col items-center w-full py-4 lg:py-8 px-4 md:px-8 relative z-20">
-      <div className="flex items-center justify-center w-full max-w-[90rem]">
-        <div ref={containerRef} className="fan-layout flex relative justify-center items-center w-full max-w-[80rem]">
+    <div className="fan-carousel" role="region" aria-roledescription="carrossel" aria-label="Fotos do Lar" onKeyDown={event => {
+      if ((event.key === "ArrowLeft" || event.key === "ArrowRight") && needsPagination) {
+        event.preventDefault();
+        if (event.target instanceof Element && event.target.closest(".fan-card")) {
+          const arrows = event.currentTarget.querySelectorAll<HTMLButtonElement>(".fan-arrow");
+          arrows[event.key === "ArrowLeft" ? 0 : 1]?.focus({ preventScroll: true });
+        }
+        cycle(event.key === "ArrowLeft" ? "left" : "right");
+      }
+    }}>
+      <div className="fan-track">
+        <div ref={containerRef} className="fan-layout">
           {cards.map((card, index) => {
             const image = (
               <div className="relative w-full h-full overflow-hidden">
@@ -281,21 +290,19 @@ export default function SocialCards({ cards, motionEnabled = true, onSelect }: S
         </div>
       </div>
 
-      {needsPagination && (
-        <div className="flex items-center justify-center gap-4 mt-4 md:mt-6 z-30">
-          <button className={`${ARROW_CLASSES} w-10 h-10 md:w-12 md:h-12`} onClick={() => cycle("left")} aria-label="Foto anterior">
-            {chevron("left")}
-          </button>
-          <div className="flex items-center gap-2">
-            {cards.map((_, i) => (
-              <span key={i} className={`w-2 h-2 rounded-full transition-all duration-300 ${i === centerIndex ? "bg-black/70 dark:bg-white/80 scale-[1.3]" : "bg-black/15 dark:bg-white/15"}`} />
-            ))}
+      {needsPagination && <>
+        <div className="fan-controls">
+          <button type="button" className="fan-arrow" onClick={() => cycle("left")} aria-label="Foto anterior"><ChevronLeft aria-hidden="true" /></button>
+          <div className="fan-dots" role="group" aria-label="Escolher foto">
+            {cards.map((card, index) => <button type="button" key={index} className="fan-dot"
+              aria-label={`Mostrar foto ${index + 1}: ${card.alt || "foto do Lar"}`}
+              aria-current={index === centerIndex ? "true" : undefined}
+              onClick={() => goTo(index)} />)}
           </div>
-          <button className={`${ARROW_CLASSES} w-10 h-10 md:w-12 md:h-12`} onClick={() => cycle("right")} aria-label="Próxima foto">
-            {chevron("right")}
-          </button>
+          <button type="button" className="fan-arrow" onClick={() => cycle("right")} aria-label="Próxima foto"><ChevronRight aria-hidden="true" /></button>
         </div>
-      )}
-    </section>
+        <p className="fan-counter" aria-live="polite" aria-atomic="true">Foto {centerIndex + 1} de {totalCards}</p>
+      </>}
+    </div>
   );
 }

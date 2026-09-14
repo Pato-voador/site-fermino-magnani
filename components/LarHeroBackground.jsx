@@ -45,7 +45,7 @@ export default function LarHeroBackground({ enabled = true }) {
   return <div ref={layerRef} className="grid-background" aria-hidden="true">
     {enabled && motionAllowed && visible && cover && <div className="grid-photo-cover" style={cover}>
       <BackgroundFallback><Suspense fallback={null}>
-        <GridDistortion imageSrc="/images/lar-fachada.png" grid={29} mouse={0.1} strength={0.15} relaxation={0.9} className="custom-class" />
+        <GridDistortion imageSrc="/images/lar-fachada.png" grid={200} mouse={0.1} strength={0.15} relaxation={0.9} className="custom-class" />
       </Suspense></BackgroundFallback>
     </div>}
   </div>;

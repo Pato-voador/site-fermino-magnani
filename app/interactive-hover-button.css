@@ -1,0 +1,13 @@
+.interactive-hover-button.header-donate{position:relative;display:inline-block;flex-shrink:0;width:12rem;min-width:0;cursor:pointer;overflow:hidden;border-radius:9999px;border:1px solid var(--border);background:var(--background);color:var(--foreground);padding:.5rem;text-align:center;font-weight:600}
+.interactive-hover-button__default{display:inline-block;transform:translateX(.25rem)}
+.interactive-hover-button__hover{position:absolute;top:0;z-index:10;display:flex;height:100%;width:100%;transform:translateX(3rem);align-items:center;justify-content:center;gap:.5rem;color:var(--primary-foreground);opacity:0;white-space:nowrap}
+.interactive-hover-button__hover svg{width:1.5rem;height:1.5rem;flex-shrink:0}
+.interactive-hover-button__dot{position:absolute;left:20%;top:40%;height:.5rem;width:.5rem;transform:scale(1);border-radius:.5rem;background:var(--primary)}
+.interactive-hover-button__default,.interactive-hover-button__hover,.interactive-hover-button__dot{transition:all 300ms cubic-bezier(.4,0,.2,1)}
+.interactive-hover-button:is(:hover,:focus-visible) .interactive-hover-button__default{transform:translateX(3rem);opacity:0}
+.interactive-hover-button:is(:hover,:focus-visible) .interactive-hover-button__hover{transform:translateX(-.25rem);opacity:1}
+.interactive-hover-button:is(:hover,:focus-visible) .interactive-hover-button__dot{left:0;top:0;height:100%;width:100%;transform:scale(1.8);background:var(--primary)}
+@media(max-width:600px){.interactive-hover-button.header-donate{width:8.25rem}}
+@media(max-width:359px){.interactive-hover-button.header-donate{width:7rem}}
+@media(prefers-reduced-motion:reduce){.interactive-hover-button__default,.interactive-hover-button__hover,.interactive-hover-button__dot{transition:none}}
+

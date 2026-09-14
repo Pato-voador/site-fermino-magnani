@@ -1,15 +1,17 @@
-.lar-gallery{padding:64px 0 40px;overflow:hidden;background:#f8f6ed}
-.gallery-heading{text-align:center}.gallery-heading .eyebrow{justify-content:center;margin-bottom:12px}.gallery-heading>p:last-child{margin-top:16px}
-.gallery-stage{min-height:490px}
-.fan-layout{height:440px;isolation:isolate}
-.fan-card{position:absolute;width:250px;height:310px;overflow:hidden;border:7px solid #fff;border-radius:18px;background:#e6ece4;padding:0;box-shadow:0 15px 35px #15352235;will-change:transform;transform-origin:50% 85%;opacity:0}
-.fan-card:focus-visible{outline:3px solid #ad7910;outline-offset:5px}
-.fan-card[aria-hidden=true]{pointer-events:none}
-.gallery-placeholder{width:280px;height:320px;object-fit:cover;margin:60px auto;border:7px solid white;border-radius:18px}
-.gallery-dialog{width:min(1050px,94vw)!important;max-width:1050px!important;padding:42px 16px 16px;background:var(--card);border-radius:18px}
-.gallery-dialog>img{max-height:78vh;max-width:100%;width:auto;height:auto;object-fit:contain;margin:auto}
-.dark .lar-gallery{background:#17281f}.dark .fan-card{border-color:#304536;background:#23372b}.dark .fan-card:focus-visible{outline-color:#f3cd66}
-@media(max-width:1023px){.fan-card{width:220px;height:290px}.fan-layout{height:410px}}
-@media(max-width:767px){.fan-card{width:180px;height:240px}.fan-layout{height:350px}.gallery-stage{min-height:410px}.lar-gallery{padding-top:50px}}
-@media(max-width:479px){.fan-card{width:155px;height:210px;border-width:5px;border-radius:13px}.fan-layout{height:310px}.gallery-stage{min-height:370px}}
-.dark .lar-gallery{background:#1b2b23}.dark .fan-card{border-color:#7b947f;background:#344f3e;box-shadow:0 16px 36px #0006}
+.lar-gallery{padding:64px 0 48px;overflow:hidden;background:var(--surface)}
+.gallery-heading{text-align:center}.gallery-heading .eyebrow{margin-bottom:12px}.gallery-heading h2{font-size:clamp(2.1rem,3.6vw,3.25rem)}
+.gallery-stage{min-height:490px}.fan-carousel{position:relative;z-index:20;width:100%;padding:20px 16px 0;display:flex;flex-direction:column;align-items:center}.fan-track{width:100%;max-width:1280px}
+.fan-layout{height:420px;position:relative;display:flex;align-items:center;justify-content:center;width:100%;isolation:isolate}
+.fan-card{position:absolute;width:250px;height:310px;overflow:hidden;border:6px solid var(--card);border-radius:16px;background:var(--card);padding:0;box-shadow:0 12px 24px #15352226;will-change:transform;transform-origin:50% 85%;opacity:0;cursor:pointer}
+.fan-card[aria-hidden=true]{pointer-events:none}.fan-card:focus-visible{outline:3px solid var(--ring);outline-offset:5px}
+.fan-controls{position:relative;z-index:30;display:flex;align-items:center;justify-content:center;gap:20px;margin-top:12px}
+.fan-arrow{width:46px;height:46px;border:1.5px solid var(--control-border);border-radius:50%;background:var(--control-bg);color:var(--control-fg);display:flex;align-items:center;justify-content:center;box-shadow:0 3px 8px #1535220c;transition:background .2s,color .2s,transform .2s}
+.fan-arrow svg{width:21px;height:21px;stroke-width:2.5}.fan-arrow:hover{background:var(--primary);color:var(--primary-foreground);border-color:var(--primary)}.fan-arrow:active{transform:scale(.95)}
+.fan-dots{display:flex;align-items:center;gap:0}.fan-dot{display:flex;align-items:center;justify-content:center;width:26px;height:40px;padding:0;border:0;background:transparent;border-radius:8px}
+.fan-dot:before{content:'';display:block;width:8px;height:8px;border-radius:50%;background:var(--dot);transition:width .25s,background .25s}.fan-dot[aria-current=true]:before{width:22px;border-radius:8px;background:var(--dot-active)}.fan-dot:hover:before{background:var(--dot-active)}
+.fan-counter{margin:12px 0 0;text-align:center;font-size:.875rem;color:var(--text)}
+.gallery-placeholder{width:250px;height:310px;object-fit:cover;margin:50px auto;border:6px solid var(--card);border-radius:16px}
+.gallery-dialog{width:min(1050px,94vw)!important;max-width:1050px!important;padding:42px 16px 16px;background:var(--card);border-radius:18px}.gallery-dialog>img{max-height:78vh;max-width:100%;width:auto;height:auto;object-fit:contain;margin:auto}
+@media(max-width:1023px){.fan-card{width:220px;height:290px}.fan-layout{height:390px}}
+@media(max-width:767px){.fan-card{width:180px;height:240px}.fan-layout{height:340px}.gallery-stage{min-height:430px}.lar-gallery{padding-top:54px}}
+@media(max-width:479px){.fan-card{width:155px;height:210px;border-width:5px;border-radius:12px}.fan-layout{height:300px}.gallery-stage{min-height:380px}.fan-controls{gap:8px}.fan-arrow{width:40px;height:40px}.fan-dot{width:24px}.fan-carousel{padding-inline:8px}}

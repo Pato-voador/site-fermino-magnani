@@ -23,7 +23,7 @@ export default function EventCarousel() {
   };
   return <section className="events-section events-minimal" id="eventos" aria-labelledby="eventos-title">
     <div className="wrap">
-      <div className="section-heading events-heading"><div><p className="eyebrow">Eventos</p><h2 id="eventos-title">Bons encontros. Uma boa causa.</h2></div></div>
+      <div className="section-heading events-heading"><div><p className="eyebrow">Eventos</p><h2 id="eventos-title">Encontros que ajudam.</h2></div></div>
       <div className="event-carousel" role="region" aria-roledescription={multiple ? "carrossel" : undefined} aria-label="Eventos do Lar">
         <div className="event-slides" ref={track} tabIndex={multiple ? 0 : undefined}
           onKeyDown={event => {
@@ -45,7 +45,7 @@ export default function EventCarousel() {
             <div className="event-summary">
               <span className="eyebrow">{eventIsPast(new Date()) ? "Anúncio histórico" : "Em breve"}</span>
               <h3>{event.title}</h3>
-              <p>Uma conversa sobre educação e família, em prol do Lar.</p>
+              <p>Educação e família em uma conversa em benefício do Lar.</p>
               <div className="event-essentials"><time dateTime={event.dateTime}>{event.date} · {event.time}</time><span>{event.location}</span></div>
               <a className="button button-green" href={event.href} target="_blank" rel="noopener noreferrer">Ver detalhes do evento<span className="sr-only"> (abre em nova aba)</span></a>
             </div>
