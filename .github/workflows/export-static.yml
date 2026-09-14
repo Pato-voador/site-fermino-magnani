@@ -1,0 +1,115 @@
+name: Exportar site estatico
+
+on:
+  push:
+    branches:
+      - static-export
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  export:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Instalar dependencias
+        run: npm ci
+
+      - name: Gerar site estatico
+        run: npm run build
+
+      - name: Tornar caminhos relativos e remover arquivos desnecessarios
+        shell: python
+        run: |
+          from pathlib import Path
+          import os
+          import re
+
+          root = Path("out")
+          if not (root / "index.html").is_file():
+              raise SystemExit("index.html nao foi gerado na raiz")
+
+          for path in root.rglob("*.html"):
+              text = path.read_text(encoding="utf-8")
+              text = re.sub(r'(?P<attr>\b(?:href|src|poster|action)=)(?P<q>["\'])/(?!/)', r'\g<attr>\g<q>./', text)
+              text = re.sub(r'(?P<attr>\bsrcset=)(?P<q>["\'])/(?!/)', r'\g<attr>\g<q>./', text)
+              path.write_text(text, encoding="utf-8")
+
+          for path in root.rglob("*.css"):
+              text = path.read_text(encoding="utf-8")
+              prefix = Path(os.path.relpath(root, path.parent)).as_posix()
+              text = re.sub(r'url\((["\']?)/(?!/)', lambda m: "url(" + m.group(1) + prefix + "/", text)
+              path.write_text(text, encoding="utf-8")
+
+          for path in root.rglob("*.js"):
+              text = path.read_text(encoding="utf-8")
+              text = text.replace('"/_next/', '"./_next/').replace("'/ _next/".replace(" ", ""), "'./_next/")
+              text = text.replace('"/images/', '"./images/').replace("'/images/", "'./images/")
+              text = text.replace('"/fonts/', '"./fonts/').replace("'/fonts/", "'./fonts/")
+              path.write_text(text, encoding="utf-8")
+
+          for pattern in ("*.map", "*.txt"):
+              for path in root.rglob(pattern):
+                  path.unlink()
+          for name in ("404.html", "_not-found.html"):
+              target = root / name
+              if target.exists():
+                  target.unlink()
+
+      - name: Comprimir imagens
+        run: |
+          python -m pip install --disable-pip-version-check pillow
+          python - <<'PY'
+          from pathlib import Path
+          from PIL import Image, ImageOps
+
+          for path in Path("out/images").rglob("*"):
+              if not path.is_file() or path.suffix.lower() not in {".jpg", ".jpeg", ".png"}:
+                  continue
+              try:
+                  with Image.open(path) as source:
+                      image = ImageOps.exif_transpose(source)
+                      image.thumbnail((1800, 1800))
+                      if path.suffix.lower() in {".jpg", ".jpeg"}:
+                          if image.mode not in {"RGB", "L"}:
+                              image = image.convert("RGB")
+                          quality = 90 if "logo" in path.name.lower() else 82
+                          image.save(path, "JPEG", quality=quality, optimize=True, progressive=True)
+                      else:
+                          image.save(path, "PNG", optimize=True)
+              except Exception as error:
+                  print(f"Aviso: nao foi possivel otimizar {path}: {error}")
+          PY
+
+      - name: Validar pacote
+        shell: python
+        run: |
+          from pathlib import Path
+          import re
+
+          root = Path("out")
+          index = root / "index.html"
+          if not index.is_file():
+              raise SystemExit("Falta index.html na raiz")
+          html = index.read_text(encoding="utf-8")
+          bad = re.findall(r'\b(?:href|src|poster|action)=["\']/(?!/)', html)
+          if bad:
+              raise SystemExit("Ainda existem caminhos internos absolutos no index.html")
+          print(f"Pacote validado: {sum(1 for p in root.rglob('*') if p.is_file())} arquivos")
+
+      - name: Criar ZIP para download
+        uses: actions/upload-artifact@v4
+        with:
+          name: site-fermino-magnani-pronto
+          path: out/**
+          include-hidden-files: true
+          if-no-files-found: error
+          compression-level: 9
