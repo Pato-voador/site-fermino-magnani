@@ -2,19 +2,65 @@
 
 import { useEffect } from "react";
 
-/** Native smooth scrolling preserves wheel/touch interruption and browser history. */
+let activeScrollFrame: number | null = null;
+
+/** Scroll interno com animação própria para não depender do smooth scroll do navegador. */
 export function scrollToSection(id: string, enabled: boolean) {
   const section = document.getElementById(id);
   if (!section) return;
+
   const focusTarget = section.querySelector<HTMLElement>("h1, h2") ?? section;
   if (!focusTarget.hasAttribute("tabindex")) {
     focusTarget.setAttribute("tabindex", "-1");
     focusTarget.addEventListener("blur", () => focusTarget.removeAttribute("tabindex"), { once: true });
   }
-  focusTarget.focus({ preventScroll: true });
-  const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  section.scrollIntoView({ behavior: enabled && !reduced ? "smooth" : "instant", block: "start" });
-  if (window.location.hash !== `#${id}`) window.history.pushState(null, "", `#${id}`);
+
+  if (activeScrollFrame !== null) {
+    cancelAnimationFrame(activeScrollFrame);
+    activeScrollFrame = null;
+  }
+
+  const header = document.querySelector<HTMLElement>(".site-header");
+  const headerOffset = header?.getBoundingClientRect().height ?? 0;
+  const startY = window.scrollY;
+  const targetY = Math.max(0, startY + section.getBoundingClientRect().top - headerOffset);
+
+  const finish = () => {
+    focusTarget.focus({ preventScroll: true });
+    if (window.location.hash !== `#${id}`) window.history.pushState(null, "", `#${id}`);
+  };
+
+  if (!enabled) {
+    window.scrollTo({ top: targetY, left: 0, behavior: "auto" });
+    finish();
+    return;
+  }
+
+  const distance = targetY - startY;
+  if (Math.abs(distance) < 2) {
+    finish();
+    return;
+  }
+
+  const duration = Math.min(1100, Math.max(650, Math.abs(distance) * 0.38));
+  const startedAt = performance.now();
+  const easeInOutCubic = (t: number) =>
+    t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+
+  const step = (now: number) => {
+    const progress = Math.min(1, (now - startedAt) / duration);
+    window.scrollTo(0, startY + distance * easeInOutCubic(progress));
+
+    if (progress < 1) {
+      activeScrollFrame = requestAnimationFrame(step);
+      return;
+    }
+
+    activeScrollFrame = null;
+    finish();
+  };
+
+  activeScrollFrame = requestAnimationFrame(step);
 }
 
 export default function SiteMotion({ enabled }: { enabled: boolean }) {

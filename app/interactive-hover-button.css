@@ -9,5 +9,5 @@
 .interactive-hover-button:is(:hover,:focus-visible) .interactive-hover-button__dot{left:0;top:0;height:100%;width:100%;transform:scale(1.8);background:var(--primary)}
 @media(max-width:600px){.interactive-hover-button.header-donate{width:8.25rem}}
 @media(max-width:359px){.interactive-hover-button.header-donate{width:7rem}}
-@media(prefers-reduced-motion:reduce){.interactive-hover-button__default,.interactive-hover-button__hover,.interactive-hover-button__dot{transition:none}}
+@media(prefers-reduced-motion:reduce){html:not([data-motion=on]) .interactive-hover-button__default,html:not([data-motion=on]) .interactive-hover-button__hover,html:not([data-motion=on]) .interactive-hover-button__dot{transition:none}}
 
