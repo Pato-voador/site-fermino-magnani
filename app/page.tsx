@@ -38,6 +38,20 @@ function External({ href, children, className = "text-link" }: { href: string; c
     {children}<ArrowUpRight size={16} aria-hidden="true" /><span className="sr-only"> (abre em nova aba)</span>
   </a>;
 }
+
+function InstagramIcon() {
+  return <svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
+    <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+    <path d="M17.5 6.5h.01" />
+  </svg>;
+}
+function FacebookIcon() {
+  return <svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
+  </svg>;
+}
+
 function Brand() {
   return <a href="#inicio" className="brand" aria-label="Lar da Criança Fermino Magnani — início">
     <img src="/images/logo-lar.jpg" alt="" width="56" height="56" />
@@ -136,7 +150,7 @@ export default function Home() {
       </section>
     </main>
 
-    <footer><div className="wrap footer-main"><Brand /><div className="social-links"><External href={lar.instagram}>Instagram</External><External href={lar.facebook}>Facebook</External></div></div>
+    <footer><div className="wrap footer-main"><Brand /><div className="social-links"><External href={lar.instagram} className="social-link"><InstagramIcon />Instagram</External><External href={lar.facebook} className="social-link"><FacebookIcon />Facebook</External></div></div>
       <div className="wrap footer-bottom"><span>CNPJ {lar.cnpj}</span><div className="footer-tools"><button className="motion-toggle" onClick={() => setMotionEnabled(value => !value)} aria-pressed={motionEnabled}>{motionEnabled ? "Pausar animações" : "Ativar animações"}</button><details className="image-credits"><summary>Créditos de imagem</summary><p>Retrato de Mário Sérgio Cortella: <External href="https://commons.wikimedia.org/wiki/File:Mario_Sergio_Cortella.jpg">Multishow</External> · <External href="https://creativecommons.org/licenses/by/3.0/">CC BY 3.0</External>.</p></details></div></div>
     </footer>
 
