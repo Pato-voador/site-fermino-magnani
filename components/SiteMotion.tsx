@@ -94,14 +94,19 @@ export default function SiteMotion({ enabled }: { enabled: boolean }) {
       running.set(el, animation);
       animation.onfinish = () => running.delete(el);
     };
+    const offscreen = new WeakSet<Element>();
     const observer = new IntersectionObserver(entries => {
-      entries.filter(entry => entry.isIntersecting).forEach((entry, index) => {
-        animate(entry.target, Math.min(index, 2) * 80);
-        observer.unobserve(entry.target);
-      });
+      let delayIndex = 0;
+      for (const { target, isIntersecting } of entries) {
+        if (!isIntersecting) {
+          offscreen.add(target);
+          continue;
+        }
+        if (offscreen.has(target)) animate(target, Math.min(delayIndex++, 2) * 80);
+        observer.unobserve(target);
+      }
     }, { threshold: 0.12, rootMargin: "0px 0px -24px 0px" });
     document.querySelectorAll(".section-heading, .history-timeline li, .donation-grid > *, .partners-intro, .partner-row, .event-carousel, .transparency-grid > *, .contact-grid > *").forEach(el => observer.observe(el));
-    document.querySelectorAll(".hero-copy > *").forEach((el, i) => animate(el, i * 85));
     const revealFocused = (event: FocusEvent) => {
       running.forEach((animation, el) => {
         if (event.target instanceof Node && el.contains(event.target)) { animation.cancel(); running.delete(el); }

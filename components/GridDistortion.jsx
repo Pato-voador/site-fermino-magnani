@@ -39,6 +39,7 @@ const GridDistortion = ({ grid = 15, mouse = 0.1, strength = 0.15, relaxation = 
     if (!containerRef.current) return;
 
     const container = containerRef.current;
+    let disposed = false;
 
     const scene = new THREE.Scene();
     sceneRef.current = scene;
@@ -52,9 +53,6 @@ const GridDistortion = ({ grid = 15, mouse = 0.1, strength = 0.15, relaxation = 
     renderer.setClearColor(0x000000, 0);
     rendererRef.current = renderer;
 
-    container.innerHTML = '';
-    container.appendChild(renderer.domElement);
-
     const camera = new THREE.OrthographicCamera(0, 0, 0, 0, -1000, 1000);
     camera.position.z = 2;
     cameraRef.current = camera;
@@ -66,24 +64,9 @@ const GridDistortion = ({ grid = 15, mouse = 0.1, strength = 0.15, relaxation = 
       uDataTexture: { value: null }
     };
 
-    const textureLoader = new THREE.TextureLoader();
-    textureLoader.load(imageSrc, texture => {
-      texture.minFilter = THREE.LinearFilter;
-      texture.magFilter = THREE.LinearFilter;
-      texture.wrapS = THREE.ClampToEdgeWrapping;
-      texture.wrapT = THREE.ClampToEdgeWrapping;
-      imageAspectRef.current = texture.image.width / texture.image.height;
-      uniforms.uTexture.value = texture;
-      handleResize();
-    });
-
     const size = grid;
+    // Zero offsets show the original photograph until the pointer moves.
     const data = new Float32Array(4 * size * size);
-    for (let i = 0; i < size * size; i++) {
-      data[i * 4] = Math.random() * 255 - 125;
-      data[i * 4 + 1] = Math.random() * 255 - 125;
-    }
-
     const dataTexture = new THREE.DataTexture(data, size, size, THREE.RGBAFormat, THREE.FloatType);
     dataTexture.needsUpdate = true;
     uniforms.uDataTexture.value = dataTexture;
@@ -142,39 +125,26 @@ const GridDistortion = ({ grid = 15, mouse = 0.1, strength = 0.15, relaxation = 
     const mouseState = {
       x: 0,
       y: 0,
-      prevX: 0,
-      prevY: 0,
       vX: 0,
-      vY: 0
+      vY: 0,
+      hasPosition: false
     };
 
     const handleMouseMove = e => {
       const rect = container.getBoundingClientRect();
+      if (rect.width === 0 || rect.height === 0) return;
       const x = (e.clientX - rect.left) / rect.width;
       const y = 1 - (e.clientY - rect.top) / rect.height;
-      mouseState.vX = x - mouseState.prevX;
-      mouseState.vY = y - mouseState.prevY;
-      Object.assign(mouseState, { x, y, prevX: x, prevY: y });
+      if (mouseState.hasPosition) {
+        mouseState.vX += x - mouseState.x;
+        mouseState.vY += y - mouseState.y;
+      }
+      Object.assign(mouseState, { x, y, hasPosition: true });
     };
 
     const handleMouseLeave = () => {
-      if (dataTexture) {
-        dataTexture.needsUpdate = true;
-      }
-      Object.assign(mouseState, {
-        x: 0,
-        y: 0,
-        prevX: 0,
-        prevY: 0,
-        vX: 0,
-        vY: 0
-      });
+      Object.assign(mouseState, { vX: 0, vY: 0, hasPosition: false });
     };
-
-    container.addEventListener('mousemove', handleMouseMove);
-    container.addEventListener('mouseleave', handleMouseLeave);
-
-    handleResize();
 
     const animate = () => {
       animationIdRef.current = requestAnimationFrame(animate);
@@ -189,18 +159,26 @@ const GridDistortion = ({ grid = 15, mouse = 0.1, strength = 0.15, relaxation = 
         data[i * 4 + 1] *= relaxation;
       }
 
-      const gridMouseX = size * mouseState.x;
-      const gridMouseY = size * mouseState.y;
-      const maxDist = size * mouse;
+      // Apply each movement once so a stationary pointer lets the image settle.
+      const { x, y, vX, vY } = mouseState;
+      if (vX || vY) {
+        mouseState.vX = 0;
+        mouseState.vY = 0;
+        const offsetX = strength * 100 * THREE.MathUtils.clamp(vX, -0.04, 0.04);
+        const offsetY = strength * 100 * THREE.MathUtils.clamp(vY, -0.04, 0.04);
+        const gridMouseX = size * x;
+        const gridMouseY = size * y;
+        const maxDist = size * mouse;
 
-      for (let i = 0; i < size; i++) {
-        for (let j = 0; j < size; j++) {
-          const distSq = Math.pow(gridMouseX - i, 2) + Math.pow(gridMouseY - j, 2);
-          if (distSq < maxDist * maxDist) {
-            const index = 4 * (i + size * j);
-            const power = Math.min(maxDist / Math.sqrt(distSq), 10);
-            data[index] += strength * 100 * mouseState.vX * power;
-            data[index + 1] -= strength * 100 * mouseState.vY * power;
+        for (let i = 0; i < size; i++) {
+          for (let j = 0; j < size; j++) {
+            const distSq = Math.pow(gridMouseX - i, 2) + Math.pow(gridMouseY - j, 2);
+            if (distSq < maxDist * maxDist) {
+              const index = 4 * (i + size * j);
+              const power = Math.min(maxDist / Math.sqrt(distSq), 10);
+              data[index] += offsetX * power;
+              data[index + 1] -= offsetY * power;
+            }
           }
         }
       }
@@ -209,9 +187,26 @@ const GridDistortion = ({ grid = 15, mouse = 0.1, strength = 0.15, relaxation = 
       renderer.render(scene, camera);
     };
 
-    animate();
+    new THREE.TextureLoader().load(imageSrc, texture => {
+      if (disposed) {
+        texture.dispose();
+        return;
+      }
+      texture.minFilter = THREE.LinearFilter;
+      texture.magFilter = THREE.LinearFilter;
+      texture.wrapS = THREE.ClampToEdgeWrapping;
+      texture.wrapT = THREE.ClampToEdgeWrapping;
+      imageAspectRef.current = texture.image.width / texture.image.height;
+      uniforms.uTexture.value = texture;
+      handleResize();
+      animate();
+      container.appendChild(renderer.domElement);
+      container.addEventListener('mousemove', handleMouseMove);
+      container.addEventListener('mouseleave', handleMouseLeave);
+    });
 
     return () => {
+      disposed = true;
       if (animationIdRef.current) {
         cancelAnimationFrame(animationIdRef.current);
       }
