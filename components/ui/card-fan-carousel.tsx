@@ -6,6 +6,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 
 export interface CardItem {
   imgUrl: string;
+  thumbnailUrl?: string;
   alt?: string;
   linkUrl?: string;
 }
@@ -278,7 +279,7 @@ export default function SocialCards({ cards, motionEnabled = true, onSelect }: S
           {cards.map((card, index) => {
             const image = (
               <div className="relative w-full h-full overflow-hidden">
-                <img src={card.imgUrl} loading="lazy" alt={card.alt || `Card ${index}`} className="absolute inset-0 w-full h-full object-cover z-10" />
+                <img src={card.thumbnailUrl ?? card.imgUrl} loading="lazy" alt={card.alt || `Card ${index}`} className="absolute inset-0 w-full h-full object-cover z-10" />
               </div>
             );
             return card.linkUrl ? (

@@ -4,15 +4,29 @@ import { useEffect, useRef, useState } from "react";
 import SocialCards, { type CardItem } from "@/components/ui/card-fan-carousel";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 
+const editedPhotos = [
+  ["desenho", "Criança desenhando e colorindo em uma folha de papel"],
+  ["argila", "Criança modelando argila em uma atividade na sala"],
+  ["flores-e-argila", "Criança colocando flores em uma peça de argila"],
+  ["leitura", "Duas crianças folheando livros no espaço de leitura"],
+  ["exploracao-de-objetos", "Bebê explorando objetos sobre um tapete azul"],
+  ["brinquedos", "Criança organizando brinquedos coloridos sobre a mesa"],
+  ["atividade-com-arvore", "Grupo de crianças reunido ao redor de uma árvore no pátio"],
+  ["pintura-coletiva", "Crianças em uma atividade de pintura coletiva ao ar livre"],
+  ["leitura-em-grupo", "Educadora lendo para crianças sentadas em roda"],
+  ["materiais-no-tapete", "Tubos e outros materiais organizados em um tapete colorido"],
+  ["mesa-de-piquenique", "Crianças reunidas em torno de uma toalha de piquenique com alimentos"],
+  ["evento", "Equipe preparando alimentos em um evento ao ar livre"],
+].map(([name, alt]) => ({
+  imgUrl: `/images/gallery/${name}.webp`,
+  thumbnailUrl: `/images/gallery/${name}-mini.webp`,
+  alt,
+}));
+
 const photos: CardItem[] = [
-  { imgUrl: "/images/gallery/lar-001.jpg", alt: "Mesa preparada com utensílios e materiais para brincar" },
-  { imgUrl: "/images/gallery/lar-015.jpg", alt: "Grupo de adultos reunido na cozinha do Lar" },
-  { imgUrl: "/images/gallery/lar-061.jpg", alt: "Materiais de exploração organizados em um tapete colorido" },
+  ...editedPhotos.slice(0, 3),
   { imgUrl: "/images/lar-fachada.png", alt: "Fachada do Lar da Criança Fermino Magnani" },
-  { imgUrl: "/images/gallery/lar-071.jpg", alt: "Materiais naturais e utensílios preparados no jardim" },
-  { imgUrl: "/images/gallery/lar-024.jpg", alt: "Adultos preparando pizzas na cozinha" },
-  { imgUrl: "/images/gallery/lar-070.jpg", alt: "Grupo de adultas junto a uma mesa de alimentos" },
-  { imgUrl: "/images/lar-ambiente.jpg", alt: "Sala do Lar com materiais e espaços para brincar" },
+  ...editedPhotos.slice(3),
 ];
 
 export default function LarGallery({ motionEnabled }: { motionEnabled: boolean }) {
