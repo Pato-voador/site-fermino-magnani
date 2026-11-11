@@ -21,10 +21,10 @@ function EventCard({ event, period }: { event: LarEvent; period: Period }) {
       ) : (
         <div className="event-art">{photo}</div>
       )}
-      {event.image.illustrative && <figcaption className="event-caption">Foto ilustrativa</figcaption>}
+      {event.image.illustrative && <figcaption className="sr-only">Foto ilustrativa</figcaption>}
     </figure>
     <div className="event-summary">
-      <span className="event-status" data-period={period}>
+      <span className="event-status">
         {isUpcoming ? "Em destaque" : event.historicalAnnouncement ? "Anúncio histórico" : "Evento passado"}
       </span>
       <h3>{event.title}</h3>
@@ -63,35 +63,37 @@ function EventTrack({ events, period }: { events: LarEvent[]; period: Period }) 
   }
 
   return (
-    <div className="event-carousel" role={multiple ? "region" : undefined} aria-roledescription={multiple ? "carrossel" : undefined} aria-label={multiple ? "Agenda do Lar" : undefined}>
-      <div className="event-slides" ref={track} tabIndex={multiple ? 0 : undefined}
-        onKeyDown={event => {
-          if (!multiple || event.target !== event.currentTarget) return;
-          if (event.key !== "ArrowRight" && event.key !== "ArrowLeft") return;
-          event.preventDefault();
-          goTo(active + (event.key === "ArrowRight" ? 1 : -1));
-        }}
-        onScroll={event => {
-          const scroller = event.currentTarget;
-          if (scroller.clientWidth > 0) setActive(Math.round(scroller.scrollLeft / scroller.clientWidth));
-        }}
-      >
-        {events.map((event, index) => (
-          <article key={event.id} className="event-slide" inert={index !== active} aria-label={event.title}>
-            <EventCard event={event} period={period} />
-          </article>
-        ))}
+    <div className="event-carousel-shell" role={multiple ? "region" : undefined} aria-roledescription={multiple ? "carrossel" : undefined} aria-label={multiple ? "Agenda do Lar" : undefined}>
+      <div className="event-carousel">
+        <div className="event-slides" ref={track} tabIndex={multiple ? 0 : undefined}
+          onKeyDown={event => {
+            if (!multiple || event.target !== event.currentTarget) return;
+            if (event.key !== "ArrowRight" && event.key !== "ArrowLeft") return;
+            event.preventDefault();
+            goTo(active + (event.key === "ArrowRight" ? 1 : -1));
+          }}
+          onScroll={event => {
+            const scroller = event.currentTarget;
+            if (scroller.clientWidth > 0) setActive(Math.round(scroller.scrollLeft / scroller.clientWidth));
+          }}
+        >
+          {events.map((event, index) => (
+            <article key={event.id} className="event-slide" inert={index !== active} aria-label={event.title}>
+              <EventCard event={event} period={period} />
+            </article>
+          ))}
+        </div>
       </div>
       {multiple && (
-        <div className="event-carousel-controls">
-          <button type="button" onClick={() => goTo(active - 1)} disabled={active === 0} aria-label="Evento anterior">
+        <>
+          <button className="event-arrow event-arrow-previous" type="button" onClick={() => goTo(active - 1)} disabled={active === 0} aria-label="Evento anterior">
             <ChevronLeft size={21} aria-hidden="true" />
           </button>
-          <span aria-live="polite">{active + 1} de {events.length}</span>
-          <button type="button" onClick={() => goTo(active + 1)} disabled={active >= events.length - 1} aria-label="Próximo evento">
+          <span className="sr-only" aria-live="polite">{active + 1} de {events.length}</span>
+          <button className="event-arrow event-arrow-next" type="button" onClick={() => goTo(active + 1)} disabled={active >= events.length - 1} aria-label="Próximo evento">
             <ChevronRight size={21} aria-hidden="true" />
           </button>
-        </div>
+        </>
       )}
     </div>
   );
