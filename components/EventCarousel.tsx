@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import gsap from "gsap";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { eventDateLabel, eventsByPeriod, type LarEvent } from "@/lib/events";
@@ -12,7 +13,7 @@ function EventCard({ event, period }: { event: LarEvent; period: Period }) {
   const isUpcoming = period === "upcoming";
   const description = event.description ?? (isUpcoming ? event.upcomingNotice : undefined);
 
-  return <>
+  return <div className="event-card">
     <figure className="event-photo">
       {event.historicalAnnouncement && event.link ? (
         <a className="event-art" href={event.link.href} target="_blank" rel="noopener noreferrer" aria-label="Ver detalhes da palestra (abre em nova aba)">
@@ -39,22 +40,58 @@ function EventCard({ event, period }: { event: LarEvent; period: Period }) {
         </a>
       )}
     </div>
-  </>;
+  </div>;
 }
 
 function EventTrack({ events, period }: { events: LarEvent[]; period: Period }) {
   const track = useRef<HTMLDivElement>(null);
+  const scrollTween = useRef<gsap.core.Tween | null>(null);
   const [active, setActive] = useState(0);
   const multiple = events.length > 1;
+
+  useEffect(() => () => { scrollTween.current?.kill(); }, []);
 
   function goTo(index: number) {
     const scroller = track.current;
     const slide = scroller?.children[index];
     if (!scroller || !(slide instanceof HTMLElement)) return;
+
+    scrollTween.current?.kill();
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    scroller.scrollTo({
-      left: slide.offsetLeft,
-      behavior: reducedMotion || document.documentElement.dataset.motion === "off" ? "instant" : "smooth",
+    if (reducedMotion || document.documentElement.dataset.motion === "off") {
+      scroller.scrollTo({ left: slide.offsetLeft, behavior: "instant" });
+      return;
+    }
+
+    // Let the arrow transition drive the scroll, then restore touch snapping.
+    scroller.style.scrollSnapType = "none";
+    const restoreSnap = () => {
+      scroller.style.removeProperty("scroll-snap-type");
+      scrollTween.current = null;
+    };
+
+    scrollTween.current = gsap.to(scroller, {
+      scrollLeft: slide.offsetLeft,
+      duration: 0.55,
+      ease: "power3.out",
+      onComplete: restoreSnap,
+      onInterrupt: restoreSnap,
+    });
+  }
+
+  function syncPosition(scroller: HTMLDivElement) {
+    const { clientWidth, scrollLeft } = scroller;
+    if (clientWidth === 0 || !multiple) return;
+
+    const position = Math.max(0, Math.min(events.length - 1, scrollLeft / clientWidth));
+    setActive(Math.round(position));
+
+    Array.from(scroller.children).forEach((slide, index) => {
+      const card = slide.firstElementChild;
+      if (!(card instanceof HTMLElement)) return;
+      const offset = Math.max(-1, Math.min(1, index - position));
+      card.style.setProperty("--event-card-angle", `${offset * 3}deg`);
+      card.style.setProperty("--event-card-scale", `${1 - Math.abs(offset) * 0.06}`);
     });
   }
 
@@ -66,16 +103,15 @@ function EventTrack({ events, period }: { events: LarEvent[]; period: Period }) 
     <div className="event-carousel-shell" role={multiple ? "region" : undefined} aria-roledescription={multiple ? "carrossel" : undefined} aria-label={multiple ? "Agenda do Lar" : undefined}>
       <div className="event-carousel">
         <div className="event-slides" ref={track} tabIndex={multiple ? 0 : undefined}
+          onPointerDown={() => scrollTween.current?.kill()}
+          onWheel={() => scrollTween.current?.kill()}
           onKeyDown={event => {
             if (!multiple || event.target !== event.currentTarget) return;
             if (event.key !== "ArrowRight" && event.key !== "ArrowLeft") return;
             event.preventDefault();
             goTo(active + (event.key === "ArrowRight" ? 1 : -1));
           }}
-          onScroll={event => {
-            const scroller = event.currentTarget;
-            if (scroller.clientWidth > 0) setActive(Math.round(scroller.scrollLeft / scroller.clientWidth));
-          }}
+          onScroll={event => syncPosition(event.currentTarget)}
         >
           {events.map((event, index) => (
             <article key={event.id} className="event-slide" inert={index !== active} aria-label={event.title}>
