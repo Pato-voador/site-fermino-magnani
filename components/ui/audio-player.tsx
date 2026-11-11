@@ -1,13 +1,14 @@
 "use client";
 
-import { useCallback, useRef, useState, type CSSProperties } from "react";
+import { useCallback, useId, useRef, useState, type CSSProperties } from "react";
 import { Pause, Play, Repeat, Shuffle, SkipBack, SkipForward } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-type Track = { src: string; title: string };
+type Track = { src: string; title: string; durationSeconds: number };
 
 type AudioPlayerProps = {
-  tracks: readonly [Track, ...Track[]];
+  episode: Track;
+  clips: readonly Track[];
   cover: string;
   coverAlt: string;
 };
@@ -18,8 +19,9 @@ function formatTime(seconds: number) {
   return `${minutes}:${String(remainder).padStart(2, "0")}`;
 }
 
-export default function AudioPlayer({ tracks, cover, coverAlt }: AudioPlayerProps) {
+export default function AudioPlayer({ episode, clips, cover, coverAlt }: AudioPlayerProps) {
   const audioRef = useRef<HTMLAudioElement>(null);
+  const playlistId = useId();
   const [trackIndex, setTrackIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
@@ -27,6 +29,7 @@ export default function AudioPlayer({ tracks, cover, coverAlt }: AudioPlayerProp
   const [shuffledOrder, setShuffledOrder] = useState<number[] | null>(null);
   const [repeat, setRepeat] = useState(false);
   const [error, setError] = useState(false);
+  const tracks = [episode, ...clips];
   const track = tracks[trackIndex];
   const trackOrder = tracks.map((_, index) => index);
   const elapsed = Math.min(currentTime, duration);
@@ -94,12 +97,36 @@ export default function AudioPlayer({ tracks, cover, coverAlt }: AudioPlayerProp
     setCurrentTime(time);
   }
 
+  function renderTrack(index: number, className: string) {
+    const item = tracks[index];
+    const active = index === trackIndex;
+    const playing = active && isPlaying;
+    const durationId = `${playlistId}-duration-${index}`;
+
+    return (
+      <button
+        type="button"
+        className={className}
+        aria-current={active ? "true" : undefined}
+        aria-label={`${playing ? "Pausar" : "Reproduzir"} ${item.title}`}
+        aria-describedby={durationId}
+        onClick={() => active ? togglePlayback() : selectTrack(index, true)}
+      >
+        <span className="audio-player-track-icon">
+          {playing ? <Pause size={18} aria-hidden="true" /> : <Play size={18} aria-hidden="true" />}
+        </span>
+        <span>{item.title}</span>
+        <span className="audio-player-track-duration" id={durationId}>{formatTime(item.durationSeconds)}</span>
+      </button>
+    );
+  }
+
   return (
     <div className="lar-podcast-grid">
       <div className="audio-player">
         <audio
           ref={attachAudio}
-          src={tracks[0].src}
+          src={episode.src}
           preload="metadata"
           loop={repeat}
           hidden
@@ -116,7 +143,10 @@ export default function AudioPlayer({ tracks, cover, coverAlt }: AudioPlayerProp
 
         <img className="audio-player-cover" src={cover} alt={coverAlt} width={900} height={900} loading="lazy" />
 
-        <h3 className="audio-player-title" aria-live="polite">{track.title}</h3>
+        <div className="audio-player-heading" aria-live="polite">
+          {trackIndex > 0 && <p className="audio-player-kind">Corte do episódio</p>}
+          <h3 className="audio-player-title">{track.title}</h3>
+        </div>
         <div className="audio-player-timeline">
           <input
             className="audio-player-progress"
@@ -158,28 +188,17 @@ export default function AudioPlayer({ tracks, cover, coverAlt }: AudioPlayerProp
       </div>
 
       <div className="audio-player-playlist">
-        <h3>Episódio e cortes</h3>
-        <ul>
-          {tracks.map((item, index) => {
-            const active = index === trackIndex;
-            const playing = active && isPlaying;
-
-            return (
-              <li key={item.src}>
-                <button
-                  type="button"
-                  className="audio-player-track"
-                  aria-current={active ? "true" : undefined}
-                  aria-label={`${playing ? "Pausar" : "Reproduzir"} ${item.title}`}
-                  onClick={() => active ? togglePlayback() : selectTrack(index, true)}
-                >
-                  {playing ? <Pause size={18} aria-hidden="true" /> : <Play size={18} aria-hidden="true" />}
-                  <span>{item.title}</span>
-                </button>
-              </li>
-            );
-          })}
-        </ul>
+        {renderTrack(0, "audio-player-track audio-player-episode")}
+        {clips.length > 0 && (
+          <section className="audio-player-clips" aria-labelledby={`${playlistId}-clips`}>
+            <h3 id={`${playlistId}-clips`}>Cortes do episódio</h3>
+            <ul>
+              {clips.map((clip, index) => (
+                <li key={clip.src}>{renderTrack(index + 1, "audio-player-track")}</li>
+              ))}
+            </ul>
+          </section>
+        )}
       </div>
     </div>
   );

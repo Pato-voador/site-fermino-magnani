@@ -1,11 +1,12 @@
 import AudioPlayer from "@/components/ui/audio-player";
 
-const tracks = [
-  { src: "/audio/podcast/episodio-completo.mp3", title: "Episódio completo" },
-  { src: "/audio/podcast/acolhimento-na-creche.mp3", title: "Acolhimento na creche" },
-  { src: "/audio/podcast/comida-com-carinho.mp3", title: "Comida com carinho" },
-  { src: "/audio/podcast/recado-a-comunidade.mp3", title: "Recado à comunidade" },
-] as const;
+const episode = { src: "/audio/podcast/episodio-completo.mp3", title: "Episódio completo", durationSeconds: 291 };
+
+const clips = [
+  { src: "/audio/podcast/acolhimento-na-creche.mp3", title: "Acolhimento na creche", durationSeconds: 51 },
+  { src: "/audio/podcast/comida-com-carinho.mp3", title: "Comida com carinho", durationSeconds: 37 },
+  { src: "/audio/podcast/recado-a-comunidade.mp3", title: "Recado à comunidade", durationSeconds: 39 },
+];
 
 export default function LarPodcast() {
   return (
@@ -14,7 +15,12 @@ export default function LarPodcast() {
         <h2 id="podcast-title">Podcast do Lar</h2>
         <p>Uma conversa sobre acolhimento na creche, alimentação e o papel da comunidade.</p>
       </div>
-      <AudioPlayer tracks={tracks} cover="/images/podcast/capa.webp" coverAlt="Capa do Podcast do Lar da Criança Fermino Magnani" />
+      <AudioPlayer
+        episode={episode}
+        clips={clips}
+        cover="/images/podcast/capa.webp"
+        coverAlt="Capa do Podcast do Lar da Criança Fermino Magnani"
+      />
     </section>
   );
 }

@@ -55,10 +55,21 @@
   background: #f8f6d8;
 }
 
-.audio-player-title {
-  margin: 4px 0 0;
-  color: inherit;
+.audio-player-heading {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 48px;
   text-align: center;
+}
+
+.audio-player-title {
+  color: inherit;
+}
+
+.audio-player-kind {
+  color: #c4d3c5;
+  font-size: .8125rem;
 }
 
 .audio-player-timeline {
@@ -174,28 +185,34 @@
 }
 
 .audio-player-playlist {
+  display: grid;
+  gap: 16px;
   min-width: 0;
-  padding: clamp(16px, 3vw, 28px);
+}
+
+.audio-player-clips {
+  padding: clamp(14px, 2.4vw, 24px);
   border: 1px solid var(--border);
   border-radius: 22px;
   background: var(--surface);
 }
 
-.audio-player-playlist ul {
+.audio-player-clips ul {
   display: grid;
   gap: 4px;
   list-style: none;
-  margin: 12px 0 0;
+  margin: 8px 0 0;
   padding: 0;
 }
 
 .audio-player-track {
-  display: flex;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
   align-items: center;
-  gap: 12px;
+  gap: clamp(8px, 2vw, 12px);
   width: 100%;
   min-height: 48px;
-  padding: 8px 12px;
+  padding: 8px 10px;
   border: 1px solid transparent;
   border-radius: 12px;
   background: transparent;
@@ -204,14 +221,49 @@
   text-align: start;
 }
 
-.audio-player-track svg {
+.audio-player-track-icon {
+  display: grid;
+  place-items: center;
   color: var(--green);
+}
+
+.audio-player-track-duration {
+  color: var(--text);
+  font-size: .875rem;
+  font-variant-numeric: tabular-nums;
+  font-weight: 400;
 }
 
 .audio-player-track:hover,
 .audio-player-track[aria-current="true"] {
   border-color: var(--border);
   background: var(--card);
+}
+
+.audio-player-episode,
+.audio-player-episode:hover,
+.audio-player-episode[aria-current="true"] {
+  padding: 14px clamp(12px, 3vw, 20px);
+  border-color: var(--primary);
+  border-radius: 18px;
+  background: var(--primary);
+  color: var(--primary-foreground);
+}
+
+.audio-player-episode:hover {
+  filter: brightness(1.08);
+}
+
+.audio-player-episode .audio-player-track-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: color-mix(in srgb, currentColor 16%, transparent);
+  color: inherit;
+}
+
+.audio-player-episode .audio-player-track-duration {
+  color: inherit;
 }
 
 @media (max-width: 760px) {
