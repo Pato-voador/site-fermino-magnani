@@ -10,7 +10,3 @@ export const lar = {
   junina2025: "https://www.instagram.com/stories/highlights/18131425075427754/",
   junina2024: "https://www.instagram.com/stories/highlights/17995835453487190/",
 };
-// Archive the announcement after its calendar date without asserting it occurred.
-export function eventIsPast(now: Date) {
-  return now.getTime() >= Date.parse("2026-09-12T00:00:00-03:00");
-}
