@@ -106,7 +106,7 @@ export default function SiteMotion({ enabled }: { enabled: boolean }) {
         observer.unobserve(target);
       }
     }, { threshold: 0.12, rootMargin: "0px 0px -24px 0px" });
-    document.querySelectorAll(".section-heading, .history-timeline li, .donation-grid > *, .partners-intro, .partner-row, .event-carousel, .transparency-grid > *, .contact-grid > *").forEach(el => observer.observe(el));
+    document.querySelectorAll(".section-heading, .history-timeline li, .donation-grid > *, .event-carousel, .transparency-grid > *, .contact-grid > *").forEach(el => observer.observe(el));
     const revealFocused = (event: FocusEvent) => {
       running.forEach((animation, el) => {
         if (event.target instanceof Node && el.contains(event.target)) { animation.cancel(); running.delete(el); }

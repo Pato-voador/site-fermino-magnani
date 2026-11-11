@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { ArrowUpRight, ChevronDown, MapPin, Menu, Phone, X } from "lucide-react";
+import { ArrowRight, ArrowUpRight, CalendarDays, ChevronDown, ChevronRight, HandCoins, MapPin, Menu, Package, Phone, X } from "lucide-react";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogClose } from "@/components/ui/dialog";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger, SheetClose } from "@/components/ui/sheet";
@@ -26,9 +26,9 @@ const milestones = [
   { year: "Hoje", title: "O cuidado continua", text: "Educação, alimentação e convivência, com o apoio da comunidade." },
 ];
 const partnerships = [
-  ["Apoio financeiro", "Contribua para o cuidado diário."],
-  ["Produtos e serviços", "Compartilhe o que sua empresa faz."],
-  ["Projetos e eventos", "Participe das iniciativas do Lar."],
+  { value: "financeiro", title: "Apoio financeiro", description: "Contribua para o cuidado diário.", icon: HandCoins },
+  { value: "produtos", title: "Produtos e serviços", description: "Compartilhe o que sua empresa faz.", icon: Package, interestLabel: "Produtos ou serviços" },
+  { value: "eventos", title: "Projetos e eventos", description: "Participe das iniciativas do Lar.", icon: CalendarDays, interestLabel: "Projetos ou eventos" },
 ];
 const documents = [
   ["parcerias", "Parcerias e planos de trabalho", "Termos de colaboração e planos de trabalho da instituição."],
@@ -67,6 +67,13 @@ export default function Home() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [interest, setInterest] = useState("");
   const menuDestination = useRef<string | null>(null);
+  const partnerTrigger = useRef<HTMLButtonElement | null>(null);
+
+  function openPartnership(trigger: HTMLButtonElement, value?: string) {
+    partnerTrigger.current = trigger;
+    if (value) setInterest(value);
+    setPartnerOpen(true);
+  }
 
   return <>
     <SiteMotion enabled={motionEnabled} />
@@ -139,8 +146,50 @@ export default function Home() {
       </section>
 
       <section className="section wrap partners-section" id="empresas" aria-labelledby="empresas-title">
-        <div className="partners-intro"><p className="eyebrow">Empresas e parceiros</p><h2 id="empresas-title">Vamos somar?</h2><p>Encontre uma forma de contribuir com o Lar.</p><button className="button button-green" onClick={() => setPartnerOpen(true)}>Quero ser parceiro</button></div>
-        <div className="partner-options">{partnerships.map(([title, body], i) => <article key={title} className="partner-row"><span className="option-number">0{i + 1}</span><div><h3>{title}</h3><p>{body}</p></div></article>)}</div>
+        <div className="partners-panel">
+          <div className="partners-intro">
+            <div className="partners-invitation">
+              <h2 id="empresas-title">Seja parceiro <span>do Lar.</span></h2>
+              <p>Escolha como sua empresa quer contribuir.</p>
+              <button
+                type="button"
+                className="button partner-cta"
+                aria-haspopup="dialog"
+                onClick={event => openPartnership(event.currentTarget)}
+              >
+                Quero ser parceiro <ArrowRight size={18} aria-hidden="true" />
+              </button>
+            </div>
+            <img
+              className="partners-photo"
+              src="/images/gallery/evento-mini.webp"
+              width={768}
+              height={576}
+              loading="lazy"
+              decoding="async"
+              alt="Equipe preparando alimentos em um evento ao ar livre"
+            />
+          </div>
+          <ul className="partner-options" aria-label="Formas de parceria">
+            {partnerships.map(({ value, title, description, icon: Icon }) => (
+              <li key={value}>
+                <button
+                  type="button"
+                  className="partner-row"
+                  aria-haspopup="dialog"
+                  onClick={event => openPartnership(event.currentTarget, value)}
+                >
+                  <Icon className="partner-icon" size={26} strokeWidth={1.7} aria-hidden="true" />
+                  <span className="partner-option-copy">
+                    <strong>{title}</strong>
+                    <span>{description}</span>
+                  </span>
+                  <ChevronRight className="partner-chevron" size={19} aria-hidden="true" />
+                </button>
+              </li>
+            ))}
+          </ul>
+        </div>
       </section>
 
       <EventCarousel />
@@ -165,11 +214,38 @@ export default function Home() {
     </footer>
 
     <Dialog open={partnerOpen} onOpenChange={setPartnerOpen}>
-      <DialogContent className="partner-dialog" showCloseButton={false}>
+      <DialogContent
+        className="partner-dialog"
+        showCloseButton={false}
+        onCloseAutoFocus={event => {
+          if (!partnerTrigger.current) return;
+          event.preventDefault();
+          partnerTrigger.current.focus({ preventScroll: true });
+          partnerTrigger.current = null;
+        }}
+      >
         <DialogClose asChild><button className="close-button" aria-label="Fechar formulário"><X size={20} /></button></DialogClose>
         <DialogHeader><DialogTitle className="form-title">Vamos conversar sobre parceria.</DialogTitle><DialogDescription>Conte como sua empresa gostaria de apoiar o Lar.</DialogDescription></DialogHeader>
         <form onSubmit={event => event.preventDefault()} className="partner-form">
-          <div className="form-grid"><label>Nome<input name="name" autoComplete="name" required maxLength={120} /></label><label>Empresa<input name="company" autoComplete="organization" required maxLength={160} /></label><label>Cargo<input name="role" autoComplete="organization-title" maxLength={100} /></label><label>E-mail<input type="email" name="email" autoComplete="email" required maxLength={180} /></label><label>Telefone<input type="tel" name="phone" autoComplete="tel" required maxLength={30} /></label><div className="field"><label htmlFor="interesse">Interesse na parceria</label><Select value={interest} onValueChange={setInterest}><SelectTrigger id="interesse" className="interest-select"><SelectValue placeholder="Selecione uma opção" /></SelectTrigger><SelectContent><SelectItem value="financeiro">Apoio financeiro</SelectItem><SelectItem value="produtos">Produtos ou serviços</SelectItem><SelectItem value="eventos">Projetos ou eventos</SelectItem><SelectItem value="outro">Outra possibilidade</SelectItem></SelectContent></Select></div></div>
+          <div className="form-grid">
+            <label>Nome<input name="name" autoComplete="name" required maxLength={120} /></label>
+            <label>Empresa<input name="company" autoComplete="organization" required maxLength={160} /></label>
+            <label>Cargo<input name="role" autoComplete="organization-title" maxLength={100} /></label>
+            <label>E-mail<input type="email" name="email" autoComplete="email" required maxLength={180} /></label>
+            <label>Telefone<input type="tel" name="phone" autoComplete="tel" required maxLength={30} /></label>
+            <div className="field">
+              <label htmlFor="interesse">Interesse na parceria</label>
+              <Select value={interest} onValueChange={setInterest}>
+                <SelectTrigger id="interesse" className="interest-select"><SelectValue placeholder="Selecione uma opção" /></SelectTrigger>
+                <SelectContent>
+                  {partnerships.map(({ value, title, interestLabel }) => (
+                    <SelectItem key={value} value={value}>{interestLabel ?? title}</SelectItem>
+                  ))}
+                  <SelectItem value="outro">Outra possibilidade</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
           <label>Mensagem<textarea name="message" rows={3} maxLength={3000} /></label><button className="button button-green full" type="submit" disabled>Enviar interesse</button>
         </form>
       </DialogContent>
