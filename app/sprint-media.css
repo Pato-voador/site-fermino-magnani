@@ -1,0 +1,99 @@
+.lar-banner {
+  display: block;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: clamp(14px, 2vw, 24px);
+  background: var(--card);
+}
+
+.lar-banner img {
+  width: 100%;
+  height: auto;
+}
+
+.lar-banner-institucional {
+  margin-block-start: clamp(24px, 5vw, 72px);
+}
+
+.lar-banner-campanha,
+.lar-banner-servico {
+  margin-block-end: clamp(32px, 5vw, 72px);
+}
+
+.lar-banner-action {
+  display: none;
+}
+
+.lar-podcast-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
+  align-items: start;
+  gap: 24px;
+}
+
+.lar-podcast-episode,
+.lar-podcast-clips {
+  padding: clamp(18px, 3vw, 32px);
+  border: 1px solid var(--border);
+  border-radius: 22px;
+}
+
+.lar-podcast-episode {
+  background: var(--surface);
+}
+
+.lar-podcast-episode > svg {
+  margin-bottom: 16px;
+  color: var(--green);
+}
+
+.lar-podcast-episode h3 {
+  margin-bottom: 16px;
+  font-size: 1.35rem;
+}
+
+.lar-podcast-clips ul {
+  list-style: none;
+  margin: 16px 0 0;
+  padding: 0;
+}
+
+.lar-podcast-clips li + li {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+}
+
+.lar-podcast-clips h4 {
+  margin: 0 0 8px;
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.lar-podcast audio {
+  display: block;
+  width: 100%;
+  height: 54px;
+}
+
+.lar-podcast audio:focus-visible {
+  outline: 3px solid var(--ring);
+  outline-offset: 4px;
+  border-radius: 100px;
+}
+
+@media (max-width: 760px) {
+  .lar-podcast-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .lar-banner-action {
+    display: block;
+    padding: 10px 16px;
+    color: var(--green);
+    text-align: center;
+    font-weight: 700;
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+}

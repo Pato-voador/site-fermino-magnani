@@ -5,6 +5,7 @@ import "./site.css";
 import "./interactive-hover-button.css";
 import "./motion.css";
 import "./gallery.css";
+import "./sprint-media.css";
 
 export const metadata: Metadata = {
   title: "Lar da Criança Fermino Magnani | Cuidado, educação e parceria",

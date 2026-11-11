@@ -11,11 +11,13 @@ import LarGallery from "@/components/LarGallery";
 import SiteMotion, { scrollToSection } from "@/components/SiteMotion";
 import LarHeroBackground from "@/components/LarHeroBackground";
 import EventCarousel from "@/components/EventCarousel";
+import LarBanner from "@/components/LarBanner";
+import LarPodcast from "@/components/LarPodcast";
 import { InteractiveHoverButton } from "@/components/ui/interactive-hover-button";
 import { lar } from "@/lib/lar";
 
 const nav = [
-  ["Nossa história", "sobre"], ["Galeria", "galeria"], ["Como ajudar", "doar"],
+  ["Nossa história", "sobre"], ["Galeria", "galeria"], ["Podcast", "podcast"], ["Como ajudar", "doar"],
   ["Empresas", "empresas"], ["Eventos", "eventos"], ["Transparência", "transparencia"], ["Contato", "contato"],
 ];
 const milestones = [
@@ -110,6 +112,8 @@ export default function Home() {
         </div>
       </section>
 
+      <LarBanner variant="institucional" />
+
       <section className="section wrap history-section" id="sobre" aria-labelledby="sobre-title">
         <div className="section-heading"><div><p className="eyebrow">Nossa história</p><h2 id="sobre-title">Uma vida de cuidado.</h2></div><p>Parte da história de Santa Cruz do Rio Pardo e das famílias que vivem aqui.</p></div>
         <ol className="history-timeline">
@@ -122,6 +126,10 @@ export default function Home() {
       </section>
 
       <LarGallery motionEnabled={motionEnabled} />
+
+      <LarPodcast />
+
+      <LarBanner variant="campanha" />
 
       <section className="section donation-section" id="doar" aria-labelledby="doar-title">
         <div className="wrap donation-grid">
@@ -141,6 +149,8 @@ export default function Home() {
         <div><p className="eyebrow">Transparência</p><h2 id="transparencia-title">Confiança se constrói.</h2><p>Consulte os documentos do Lar no portal da Prefeitura.</p><External href={lar.transparency}>Acessar portal</External></div>
         <Accordion type="single" collapsible className="documents">{documents.map(([id, title, description]) => <AccordionItem key={id} value={id}><AccordionTrigger className="doc-trigger">{title}</AccordionTrigger><AccordionContent className="doc-content"><p>{description}</p><External href={lar.transparency}>Consultar documentos</External></AccordionContent></AccordionItem>)}</Accordion>
       </section>
+
+      <LarBanner variant="servico" />
 
       <section className="section contact-section" id="contato" aria-labelledby="contato-title">
         <div className="wrap contact-grid">
